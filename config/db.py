@@ -1,12 +1,30 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+import os
+from dotenv import load_dotenv
 
-SQLALCHEMY_DATABASE_URL = "postgresql://ilham:120579@testing/db"
+from pathlib import Path
+env_path = Path('.') / '.env'
+load_dotenv(env_path)
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+class Settings:
+    PROJECT_NAME:str = "Job Board"
+    PROJECT_VERSION: str = "1.0.0"
 
-Base = declarative_base()
+    POSTGRES_USER  = os.getenv("POSTGRES_USER")
+    POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+    POSTGRES_SERVER  = os.getenv("POSTGRES_SERVER","localhost")
+    POSTGRES_PORT  = os.getenv("POSTGRES_PORT",5432) # default postgres port is 5432
+    POSTGRES_DB  = os.getenv("POSTGRES_DB","tdd")
+    DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:{POSTGRES_PORT}/{POSTGRES_DB}"
+
+settings = Settings()
+
+if __name__ == "__main__":
+    print(settings.DATABASE_URL)
+    print(settings.POSTGRES_USER)
+    print(settings.POSTGRES_PASSWORD)
+    print(settings.POSTGRES_SERVER)
+    print(settings.POSTGRES_PORT)
+    print(settings.POSTGRES_DB)
+    print(settings.PROJECT_NAME)
+    print(settings.PROJECT_VERSION)
+    
